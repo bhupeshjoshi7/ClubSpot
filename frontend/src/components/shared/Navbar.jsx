@@ -48,11 +48,10 @@ export const Navbar = () => {
           {
             
               user && user?.role=="recruiter" ? 
-              (
               <>
-                <li><Link to="/admin/companies">Clubs</Link></li>
-              <li><Link to="/admin/jobs">Jobs</Link> </li>
-              </>)
+              <li><Link to="/admin/companies">Clubs</Link></li>
+              <li><Link to="/admin/jobs">Jobs</Link> </li>  
+              </>
             :
             <>
             <li><Link to="/">Home</Link></li>
@@ -69,16 +68,16 @@ export const Navbar = () => {
               <Link to="/signup"><Button className="bg-[blue] hover:bg-[#050590]" >SignUp</Button></Link>
               </div>
             ) :(
-              <Popover>
+          <Popover>
             <PopoverTrigger>
               <Avatar className="cursor-pointer">
-                <AvatarImage src="logof.jpg" />
+                <AvatarImage src="https://github.com/shadcn.png"/> 
               </Avatar>
             </PopoverTrigger>
             <PopoverContent>
               <div className="  flex items-center gap-4 space-y-2">
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src="https://github.com/shadcn.png"/>
                 </Avatar>
                 <div>
                   <h4 className="font-medium">{user?.fullname}</h4>

@@ -9,6 +9,7 @@ import AppliedJobTable from './components/AppliedClubsTable'
 import AppliedClubsTable from './components/AppliedClubsTable'
 import ClubDescription from './components/ClubDescription'
 import Companies from './components/admin/Companies'
+import CompanyCreate from './components/admin/CompanyCreate'
 
 const appRouter = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const appRouter = createBrowserRouter([
 {
   path:"admin/companies",
   element:<Companies></Companies>
+},
+{
+  path:"admin/companies/create",
+  element:<CompanyCreate></CompanyCreate>
 }
 
 ])
