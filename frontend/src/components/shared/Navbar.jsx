@@ -50,7 +50,7 @@ export const Navbar = () => {
               user && user?.role=="recruiter" ? 
               <>
               <li><Link to="/admin/companies">Clubs</Link></li>
-              <li><Link to="/admin/jobs">Jobs</Link> </li>  
+                
               </>
             :
             <>

@@ -16,7 +16,7 @@ const Companies = () => {
             <Input className="w-fit"
             placeholder="Filter by name"
             />
-            <Button onClick={()=>navigate("/admin/companies/create") }> New Company</Button>
+            <Button onClick={()=>navigate("/admin/companies/create") }> New Club</Button>
           </div>
           <CompaniesTable></CompaniesTable>
 
