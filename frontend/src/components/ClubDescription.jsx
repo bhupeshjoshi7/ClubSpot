@@ -84,9 +84,9 @@ const ClubDescription = ({job}) => {
         <h1 className="font-bold my-1 ">Location: <span className="font-normal text-gray-800 pl-4"> {singleClub?.location}</span></h1>
         <h1 className="font-bold my-1 ">Total Applied : <span className="font-normal text-gray-800 pl-4"> {singleClub?.applications?.length}</span></h1>
         <h1 className="font-bold my-1 ">Posted At : <span className="font-normal text-gray-800 pl-4"> {singleClub?.createdAt?.split("T")[0]}</span></h1>
-        <h1 className="font-bold my-1 ">Club Detail 1 : <span className="font-normal text-gray-800 pl-4"> {singleClub?.requirements}</span></h1>
-        <h1 className="font-bold my-1 ">Club Detail 1 : <span className="font-normal text-gray-800 pl-4"> {singleClub?.requirements}</span></h1>
-        <h1 className="font-bold my-1 ">Club Detail 1 : <span className="font-normal text-gray-800 pl-4"> {singleClub?.requirements}</span></h1>
+        <h1 className="font-bold my-1 ">Club Position Detail 1 : <span className="font-normal text-gray-800 pl-4"> {singleClub?.requirements}</span></h1>
+        <h1 className="font-bold my-1 ">Club Position Detail 2 : <span className="font-normal text-gray-800 pl-4"> {singleClub?.requirements}</span></h1>
+        <h1 className="font-bold my-1 ">Club Position Detail 3 : <span className="font-normal text-gray-800 pl-4"> {singleClub?.requirements}</span></h1>
       </div>
     </div>
   );
