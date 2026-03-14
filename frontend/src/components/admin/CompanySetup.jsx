@@ -79,19 +79,28 @@ const CompanySetup = () => {
   return (
     <div>
       <Navbar />
-      <div className="max-w-xl mx-auto my-10">
-        <form onSubmit={submitHandler}>
-          <div className="flex items-center gap-8 p-10">
+      <div className="max-w-4xl mx-auto my-10 p-8 bg-white shadow-lg rounded-lg">
+        <div className="flex items-center gap-4 mb-8">
             <Button
               onClick={() => navigate("/admin/companies")}
               variant="outline"
             >
               <ArrowLeft />
-              <span>Back</span>
             </Button>
-            <h1 className="text-xl font-bold">Enter Details Below:</h1>
-          </div>
-          <div className="grid grid-cols-2 gap-4 my-10">
+            <h1 className="text-3xl font-bold">Club Details</h1>
+        </div>
+
+        {/* Display Company Details */}
+        <div className="mb-10 flex flex-col items-center">
+            <img src={singleCompany?.logo} alt={singleCompany?.name} className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 mb-4"/>
+            <h2 className="text-2xl font-semibold">{singleCompany?.name}</h2>
+            <p className="text-gray-600 mt-2 text-center">{singleCompany?.description}</p>
+        </div>
+
+        {/* Update Form */}
+        <form onSubmit={submitHandler}>
+          <h2 className="text-xl font-bold mb-6 border-t pt-6">Update Details</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <Label>Club Name</Label>
               <Input
@@ -110,23 +119,23 @@ const CompanySetup = () => {
                 onChange={changeEventHandler}
               />
             </div>
-            <div>
-              <Label>Club File</Label>
+            <div className="md:col-span-2">
+              <Label>Update Logo</Label>
               <Input type="file" onChange={changeFileHandler} />
             </div>
           </div>
           <Button
             type="submit"
             className="w-full mt-8"
-            disabled={loading} // Disable button when loading
+            disabled={loading}
           >
             {loading ? (
               <div className="flex items-center justify-center">
-                <Loader2 className="animate-spin h-5 w-5 mr-2" /> {/* Loader icon */}
-                Please wait...
+                <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                Updating...
               </div>
             ) : (
-              "Update"
+              "Save Changes"
             )}
           </Button>
         </form>

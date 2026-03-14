@@ -11,6 +11,8 @@ import ClubDescription from './components/ClubDescription'
 import Companies from './components/admin/Companies'
 import CompanyCreate from './components/admin/CompanyCreate'
 import CompanySetup from './components/admin/CompanySetup'
+import Position from './components/admin/Position'
+import ManageApplications from './components/admin/ManageApplications';
 
 const appRouter = createBrowserRouter([
   {
@@ -53,6 +55,14 @@ const appRouter = createBrowserRouter([
 {
   path:"admin/companies/:id",
   element:<CompanySetup/>
+},
+{
+  path:"admin/position",
+  element:<Position/>
+},
+{
+  path:"admin/applications",
+  element:<ManageApplications/>
 }
 
 ])

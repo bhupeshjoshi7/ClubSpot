@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Navbar } from "../shared/Navbar";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
-import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
+import { RadioGroup } from "@radix-ui/react-radio-group";
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -20,9 +20,11 @@ const Login = () => {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -39,51 +41,54 @@ const Login = () => {
       toast.success(res.data.message);
     } catch (error) {
       if (error.response) {
-        // Server responded with a status other than 2xx
         toast.error(
           error.response.data.message || "Login failed. Please try again."
         );
       } else {
-        // Something else happened while setting up the request
         toast.error("An error occurred. Please try again.");
       }
     }
   };
+
   return (
     <div>
       <Navbar />
-      <div className="flex items-center justify-center max-w-7xl mx-auto">
+      <div className="flex items-center justify-center max-w-7xl mx-auto px-4">
         <form
           onSubmit={submitHandler}
-          className="w-1/2 border border-gray-200 rounded-md p-10 my-10"
+          className="w-full md:w-1/2 lg:w-1/3 border border-gray-200 rounded-md p-10 my-10"
         >
-          <h1 className="text-xl font-bold mb-12  text-center ">Login</h1>
+          <h1 className="text-xl font-bold mb-6 text-center">Login</h1>
 
-          <div className="my-2">
+          <div className="my-4">
             <Label>Email</Label>
             <Input
-              className="my-2 "
+              className="my-2"
               type="email"
               value={input.email}
               name="email"
               onChange={changeEventHandler}
               placeholder="Bhupesh@email.com"
+              required
             />
           </div>
 
-          <div className="my-2">
+          <div className="my-4">
             <Label>Password</Label>
             <Input
-              className="my-2 "
+              className="my-2"
               type="password"
               value={input.password}
               name="password"
               onChange={changeEventHandler}
               placeholder="Password"
+              required
             />
           </div>
-          <div>
-            <RadioGroup className="flex items-center space-x-2">
+
+          <div className="my-4">
+            <Label className="block">Role</Label>
+            <RadioGroup className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <Input
                   type="radio"
@@ -93,9 +98,7 @@ const Login = () => {
                   onChange={changeEventHandler}
                   className="cursor-pointer"
                 />
-                <Label className=" font-medium " htmlFor="r1">
-                  Student
-                </Label>
+                <Label className="font-medium">Student</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Input
@@ -104,22 +107,23 @@ const Login = () => {
                   value="recruiter"
                   checked={input.role === "recruiter"}
                   onChange={changeEventHandler}
+                  className="cursor-pointer"
                 />
-                <RadioGroupItem value="comfortable" id="r2" />
-                <Label className=" font-medium " htmlFor="r2">
-                  Recruiter
-                </Label>
+                <Label className="font-medium">Recruiter</Label>
               </div>
             </RadioGroup>
           </div>
+
           <Button type="submit" className="w-full my-4">
             Login
           </Button>
-          <div >
+
+          <div className="my-4">
             <GoogleLogin />
           </div>
-          <span className="text-sm">
-            Not Registered ?{" "}
+
+          <span className="text-sm text-center">
+            Not Registered?{" "}
             <Link to="/signup" className="text-blue-600">
               Signup
             </Link>

@@ -76,7 +76,7 @@ export const login = async (req, res) => {
       role:user.role,
     };
     const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {
-      expiresIn: "1d",
+      expiresIn: "1h",
     });
     user = {
       _id: user._id,
@@ -112,50 +112,50 @@ export const logout = async (req, res) => {
     console.log(error);
   }
 };
-export const UpdateProfile = async (req,res)=>{
+export const UpdateProfile = async (req, res) => {
   try {
-    const { fullname, email, phoneNumber,bio,skills} = req.body;
-        const userId = req.id; // middleware authentication
-        let user = await User.findOne({email});
-       
-        let skillsArray;
-        if(skills){
-            skillsArray = skills.split(",");
-        }
-        // if (!user) {
-        //     return res.status(400).json({
-        //         message: "User not found.",
-        //         success: false
-        //     })
-        // }
-        // updating data
-        if(fullname) user.fullname = fullname
-        if(email) user.email = email
-        if(phoneNumber)  user.phoneNumber = phoneNumber
-        if(bio) user.profile.bio = bio
-        if(skills) user.profile.skills = skillsArray
-      
-        // resume comes later here...
-  
+    const { fullname, email, phoneNumber, bio, skills } = req.body;
+    const userId = req.id; // Middleware authentication
+    let user = await User.findById(userId); // Find user by ID
 
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false
+      });
+    }
 
-        //await user.save();
+    // Update user fields
+    if (fullname) user.fullname = fullname;
+    if (email) user.email = email;
+    if (phoneNumber) user.phoneNumber = phoneNumber;
+    if (bio) user.profile.bio = bio;
+    if (skills) user.profile.skills = skills.split(",");
 
-        user = {
-            _id: user._id,
-            fullname: user.fullname,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            role: user.role,
-            profile: user.profile
-        }
+    // Save updated user data
+    await user.save();
 
-        return res.status(200).json({
-            message:"Profile updated successfully.",
-            user,
-            success:true
-        })
+    // Prepare user response object
+    const updatedUser = {
+      _id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
+      profile: user.profile
+    };
+
+    return res.status(200).json({
+      message: "Profile updated successfully.",
+      user: updatedUser,
+      success: true
+    });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return res.status(500).json({
+      message: "An error occurred while updating the profile.",
+      success: false
+    });
   }
-}
+};
