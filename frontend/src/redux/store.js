@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit"; // Combined 
 import authSlice from "./authSlice";
 import clubSlice from "./clubSlice";
 import companySlice from "./companySlice";
+import applicationSlice from "./applicationSlice";
 import {
   persistStore,
   persistReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   auth: authSlice,
   club: clubSlice,
   company: companySlice,
+  application: applicationSlice
 });
 
 // Configuration for Redux Persist

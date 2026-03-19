@@ -9,19 +9,19 @@ import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   useGetAllClubs();
-  const {user} = useSelector(store=>store.auth);
-  const navigate= useNavigate();
-  useEffect(()=>{
-    if(user?.role=="recruiter"){
+  const { user } = useSelector(store => store.auth);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user?.role == "recruiter") {
       navigate("/admin/companies");
     }
-  },[])
+  }, [])
   return (
     <div >
-    <Navbar/>
-    <HeroSection/>
-    <LatestClubs/>
-    <Footer/>
+      <Navbar />
+      <HeroSection />
+      <LatestClubs />
+      <Footer />
     </div>
   )
 }

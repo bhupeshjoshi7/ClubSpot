@@ -13,64 +13,79 @@ import CompanyCreate from './components/admin/CompanyCreate'
 import CompanySetup from './components/admin/CompanySetup'
 import Position from './components/admin/Position'
 import ManageApplications from './components/admin/ManageApplications';
+import PostJob from './components/admin/PostJob';
+import Applicants from './components/admin/Applicants';
+import AdminClubEvents from './components/admin/AdminClubEvents';
 
 const appRouter = createBrowserRouter([
   {
-    path:"/",
-  element:<Home/>
-},
-{
-  path:"/login",
-  element:<Login/>
-},
-{
-  path:"/signup",
-  element:<Signup/>
-},
-{
-  path:"/clubs",
-  element:<Clubs/>
-},
-{
-  path:"/appliedclubs",
-  element:<AppliedClubsTable/>
-},
-{
-  path:"/profile",
-  element:<Profile/>
-},
-{
-  path:"/description/:id",
-  element:<ClubDescription/>
-},
-//ADMIN
-{
-  path:"admin/companies",
-  element:<Companies></Companies>
-},
-{
-  path:"admin/companies/create",
-  element:<CompanyCreate></CompanyCreate>
-},
-{
-  path:"admin/companies/:id",
-  element:<CompanySetup/>
-},
-{
-  path:"admin/position",
-  element:<Position/>
-},
-{
-  path:"admin/applications",
-  element:<ManageApplications/>
-}
+    path: "/",
+    element: <Home />
+  },
+  {
+    path: "/login",
+    element: <Login />
+  },
+  {
+    path: "/signup",
+    element: <Signup />
+  },
+  {
+    path: "/clubs",
+    element: <Clubs />
+  },
+  {
+    path: "/appliedclubs",
+    element: <AppliedClubsTable />
+  },
+  {
+    path: "/profile",
+    element: <Profile />
+  },
+  {
+    path: "/description/:id",
+    element: <ClubDescription />
+  },
+  //ADMIN
+  {
+    path: "admin/companies",
+    element: <Companies></Companies>
+  },
+  {
+    path: "admin/companies/create",
+    element: <CompanyCreate></CompanyCreate>
+  },
+  {
+    path: "admin/companies/:id",
+    element: <CompanySetup />
+  },
+  {
+    path: "admin/companies/:id/events",
+    element: <AdminClubEvents />
+  },
+  {
+    path: "admin/position",
+    element: <Position />
+  },
+  {
+    path: "admin/applications",
+    element: <ManageApplications />
+  },
+  {
+    path: "admin/jobs/create",
+    element: <PostJob />
+  },
+  {
+    path: "admin/jobs/:id/applicants",
+    element: <Applicants />
+  }
 
 ])
 
 function App() {
   return (
     <>
-      <RouterProvider router={appRouter}/>
+      <RouterProvider router={appRouter} />
     </>
   )
 }

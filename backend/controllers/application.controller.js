@@ -12,10 +12,10 @@ export const applyJob = async (req, res) => {
                 success: false
             })
         };
-        if(role!="student"){
+        if (role != "student") {
             return res.status(201).json({
-                message:"You are recruiter. You can not apply for job",
-                success:false
+                message: "You are recruiter. You can not apply for job",
+                success: false
             })
         };
         // check if the user has already applied for the job
@@ -38,78 +38,78 @@ export const applyJob = async (req, res) => {
         }
         // create a new application
         const newApplication = await Application.create({
-            job:jobId,
-            applicant:userId,
+            job: jobId,
+            applicant: userId,
         });
 
         job.applications.push(newApplication._id);
         await job.save();
         return res.status(201).json({
-            message:"Job applied successfully.",
-            success:true
+            message: "Job applied successfully.",
+            success: true
         })
     } catch (error) {
         console.log(error);
     }
 };
-export const getAppliedJobs = async (req,res) => {
+export const getAppliedJobs = async (req, res) => {
     try {
         const userId = req.id;
-        const application = await Application.find({applicant:userId}).sort({createdAt:-1}).populate({
-            path:'job',
-            options:{sort:{createdAt:-1}},
-            populate:{
-                path:'company',
-                options:{sort:{createdAt:-1}},
+        const application = await Application.find({ applicant: userId }).sort({ createdAt: -1 }).populate({
+            path: 'job',
+            options: { sort: { createdAt: -1 } },
+            populate: {
+                path: 'company',
+                options: { sort: { createdAt: -1 } },
             }
         });
-        if(!application){
+        if (!application) {
             return res.status(404).json({
-                message:"No Applications",
-                success:false
+                message: "No Applications",
+                success: false
             })
         };
         return res.status(200).json({
             application,
-            success:true
+            success: true
         })
     } catch (error) {
         console.log(error);
     }
 }
 // admin dekhega kitna user ne apply kiya hai
-export const getApplicants = async (req,res) => {
+export const getApplicants = async (req, res) => {
     try {
         const jobId = req.params.id;
         const job = await Job.findById(jobId).populate({
-            path:'applications',
-            options:{sort:{createdAt:-1}},
-            populate:{
-                path:'applicant'
+            path: 'applications',
+            options: { sort: { createdAt: -1 } },
+            populate: {
+                path: 'applicant'
             }
         });
-        if(!job){
+        if (!job) {
             return res.status(404).json({
-                message:'Job not found.',
-                success:false
+                message: 'Job not found.',
+                success: false
             })
         };
         return res.status(200).json({
-            job, 
-            succees:true
+            job,
+            succees: true
         });
     } catch (error) {
         console.log(error);
     }
 }
-export const updateStatus = async (req,res) => {
+export const updateStatus = async (req, res) => {
     try {
-        const {status} = req.body;
+        const { status } = req.body;
         const applicationId = req.params.id;
-        if(!status){
+        if (!status) {
             return res.status(400).json({
-                message:'status is required',
-                success:false
+                message: 'status is required',
+                success: false
             })
         };
 
@@ -138,5 +138,57 @@ export const updateStatus = async (req,res) => {
 
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const withdrawApplication = async (req, res) => {
+    try {
+        const applicationId = req.params.id;
+        const userId = req.id;
+
+        const application = await Application.findById(applicationId);
+        if (!application) {
+            return res.status(404).json({
+                message: "Application not found.",
+                success: false
+            });
+        }
+
+        if (application.status === 'accepted') {
+            return res.status(400).json({
+                message: "You cannot withdraw an accepted application.",
+                success: false
+            });
+        }
+
+        // Check if the application belongs to the user
+        if (application.applicant.toString() !== userId) {
+            return res.status(403).json({
+                message: "You are not authorized to withdraw this application.",
+                success: false
+            });
+        }
+
+        // Remove application reference from Job
+        const job = await Job.findById(application.job);
+        if (job) {
+            job.applications = job.applications.filter(id => id.toString() !== applicationId);
+            await job.save();
+        }
+
+        // Delete the application
+        await Application.findByIdAndDelete(applicationId);
+
+        return res.status(200).json({
+            message: "Application withdrawn successfully.",
+            success: true
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error.",
+            success: false
+        });
     }
 }

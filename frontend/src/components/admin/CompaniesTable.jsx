@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { Edit2, MoreHorizontal } from "lucide-react";
+import { Edit2, MoreHorizontal, Calendar } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -48,8 +48,7 @@ const CompaniesTable = () => {
                 return (
                   <TableRow
                     key={company._id}
-                    onClick={() => navigate(`/admin/companies/${company._id}`)}
-                    className="hover:bg-gray-50 transition-colors duration-300 ease-in-out cursor-pointer"
+                    className="hover:bg-gray-50 transition-colors duration-300 ease-in-out"
                   >
                     <TableCell className="py-3">
                       <Avatar className="border-2 border-gray-200 shadow-sm">
@@ -67,7 +66,29 @@ const CompaniesTable = () => {
                       {company?.createdAt.split("T")[0]}
                     </TableCell>
                     <TableCell className="py-3 text-right">
-                      <Edit2 className="h-6 w-6 text-gray-500" />
+                      <Popover>
+                        <PopoverTrigger>
+                          <button className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200">
+                            <MoreHorizontal className="text-gray-500" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-2 bg-white shadow-md rounded-lg flex flex-col w-40">
+                          <button
+                            onClick={() => navigate(`/admin/companies/${company._id}`)}
+                            className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                          >
+                            <Edit2 className="h-4 w-4 text-gray-500" />
+                            <span>Edit Details</span>
+                          </button>
+                          <button
+                            onClick={() => navigate(`/admin/companies/${company._id}/events`)}
+                            className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                          >
+                            <Calendar className="h-4 w-4 text-gray-500" />
+                            <span>Manage Events</span>
+                          </button>
+                        </PopoverContent>
+                      </Popover>
                     </TableCell>
                   </TableRow>
                 );

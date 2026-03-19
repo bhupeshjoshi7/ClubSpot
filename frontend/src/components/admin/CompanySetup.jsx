@@ -17,6 +17,8 @@ const CompanySetup = () => {
   const [input, setInput] = useState({
     name: "",
     description: "",
+    about: "",
+    pptLink: "",
     file: null,
   });
 
@@ -40,6 +42,8 @@ const CompanySetup = () => {
     const formData = new FormData();
     formData.append("name", input.name);
     formData.append("description", input.description);
+    formData.append("about", input.about);
+    formData.append("pptLink", input.pptLink);
     if (input.file) {
       formData.append("file", input.file);
     }
@@ -71,6 +75,8 @@ const CompanySetup = () => {
       setInput({
         name: singleCompany.name || "",
         description: singleCompany.description || "",
+        about: singleCompany.about || "",
+        pptLink: singleCompany.pptLink || "",
         file: null,
       });
     }
@@ -81,20 +87,20 @@ const CompanySetup = () => {
       <Navbar />
       <div className="max-w-4xl mx-auto my-10 p-8 bg-white shadow-lg rounded-lg">
         <div className="flex items-center gap-4 mb-8">
-            <Button
-              onClick={() => navigate("/admin/companies")}
-              variant="outline"
-            >
-              <ArrowLeft />
-            </Button>
-            <h1 className="text-3xl font-bold">Club Details</h1>
+          <Button
+            onClick={() => navigate("/admin/companies")}
+            variant="outline"
+          >
+            <ArrowLeft />
+          </Button>
+          <h1 className="text-3xl font-bold">Club Details</h1>
         </div>
 
         {/* Display Company Details */}
         <div className="mb-10 flex flex-col items-center">
-            <img src={singleCompany?.logo} alt={singleCompany?.name} className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 mb-4"/>
-            <h2 className="text-2xl font-semibold">{singleCompany?.name}</h2>
-            <p className="text-gray-600 mt-2 text-center">{singleCompany?.description}</p>
+          <img src={singleCompany?.logo} alt={singleCompany?.name} className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 mb-4" />
+          <h2 className="text-2xl font-semibold">{singleCompany?.name}</h2>
+          <p className="text-gray-600 mt-2 text-center">{singleCompany?.description}</p>
         </div>
 
         {/* Update Form */}
@@ -117,6 +123,26 @@ const CompanySetup = () => {
                 name="description"
                 value={input.description}
                 onChange={changeEventHandler}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <Label>About</Label>
+              <Input
+                type="text"
+                name="about"
+                value={input.about}
+                onChange={changeEventHandler}
+                placeholder="Detailed information about the club..."
+              />
+            </div>
+            <div className="md:col-span-2">
+              <Label>PPT Link</Label>
+              <Input
+                type="text"
+                name="pptLink"
+                value={input.pptLink}
+                onChange={changeEventHandler}
+                placeholder="https://docs.google.com/presentation/..."
               />
             </div>
             <div className="md:col-span-2">

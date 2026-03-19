@@ -14,9 +14,10 @@ const LatestClubs = () => {
 
       {/* Grid Layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        
-{
-          allClubs.length<=0 ? <span>NO Openings</span> : allClubs.slice(0,9).map((job)=> <LatestClubCard key={job._id} job={job} />
+        {allClubs.length <= 0 ? (
+          <span>NO Openings</span>
+        ) : (
+          allClubs.slice(0, 9).map((job) => <LatestClubCard key={job._id} job={job} />)
         )}
       </div>
     </div>

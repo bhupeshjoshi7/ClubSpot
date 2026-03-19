@@ -2,8 +2,10 @@ import React from "react";
 import { Navbar } from "./shared/Navbar";
 import Club from "./Club";
 import { useSelector } from "react-redux";
+import useGetAllClubs from "@/hooks/useGetAllClubs";
 
 const Clubs = () => {
+  useGetAllClubs();
   const { allClubs } = useSelector((store) => store.club);
 
   return (
@@ -23,7 +25,7 @@ const Clubs = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {allClubs.map((club) => (
                   <div key={club._id} className="transition-transform transform hover:scale-105">
-                    <Club club={club} />
+                    <Club job={club} />
                   </div>
                 ))}
               </div>

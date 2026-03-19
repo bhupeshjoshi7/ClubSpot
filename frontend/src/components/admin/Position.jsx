@@ -9,18 +9,18 @@ import useGetAllCompanies from '@/hooks/useGetAllCompanies'
 import AdminClubPosition from './AdminClubPosition'
 
 const Position = () => {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   return (
     <div>
-        <Navbar></Navbar>
-        <div className="max-w-6xl mx-auto my-10">
-          <div className='flex justify-end'>
-            <Button onClick={()=>navigate("/admin/companies/create") }>New Position</Button>
-          </div>
-          <AdminClubPosition></AdminClubPosition>
-
+      <Navbar></Navbar>
+      <div className="max-w-6xl mx-auto my-10">
+        <div className='flex justify-end'>
+          <Button onClick={() => navigate("/admin/jobs/create")}>New Position</Button>
         </div>
-    
+        <AdminClubPosition></AdminClubPosition>
+
+      </div>
+
     </div>
   )
 }

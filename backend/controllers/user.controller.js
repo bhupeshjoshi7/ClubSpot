@@ -12,9 +12,12 @@ export const register = async (req, res) => {
         sucess: false,
       });
     }
-    const file= req.file;
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    const file = req.file;
+    let cloudResponse = null;
+    if (file) {
+      const fileUri = getDataUri(file);
+      cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    }
 
     const user = await User.findOne({ email });
     if (user) {
@@ -30,8 +33,8 @@ export const register = async (req, res) => {
       phoneNumber,
       password: hashedPassword,
       role,
-      profile:{
-        profilePhoto :cloudResponse.secure_url,
+      profile: {
+        profilePhoto: cloudResponse ? cloudResponse.secure_url : "",
       }
     });
     return res.status(201).json({
@@ -73,7 +76,7 @@ export const login = async (req, res) => {
     }
     const tokenData = {
       userId: user._id,
-      role:user.role,
+      role: user.role,
     };
     const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {
       expiresIn: "1h",
