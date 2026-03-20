@@ -15,6 +15,10 @@ dotenv.config({});
 
 
 const app = express();
+
+// Trust reverse proxy (Required for Render & express-rate-limit)
+app.set('trust proxy', 1);
+
 app.get("/home", (req, res) => {
     return res.status(200).json({
         msg: "backend",
