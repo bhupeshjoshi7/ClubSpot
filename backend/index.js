@@ -40,7 +40,23 @@ const limiter = rateLimit({
 app.use('/api', limiter); // Apply rate limiting to all API routes
 
 const corsOptions = {
-    origin: 'https://club-spot.vercel.app',
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, postman, curl)
+        if (!origin) return callback(null, true);
+
+        const allowedOrigins = [
+            'http://localhost:5173',
+            'http://localhost:5174',
+            'https://club-spot.vercel.app'
+        ];
+
+        // Dynamically allow the true production URL, localtest, AND all Vercel Preview Branch URLs
+        if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }
 app.use(cors(corsOptions));
