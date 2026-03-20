@@ -8,11 +8,15 @@ dns.setDefaultResultOrder('ipv4first');
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Standard Gmail service
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // Use SSL
     auth: {
         user: process.env.EMAIL_USER || '', // e.g. clubspot@gmail.com
         pass: process.env.EMAIL_PASS || '', // App password
-    }
+    },
+    // Explicitly force IPv4 network resolving. Render's background IPv6 routing will crash Nodemailer otherwise.
+    family: 4
 });
 
 export const sendEmail = async (to, subject, text, html) => {
