@@ -81,26 +81,7 @@ const PostJob = () => {
                                 className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                             />
                         </div>
-                        <div>
-                            <Label>Salary</Label>
-                            <Input
-                                type="text"
-                                name="salary"
-                                value={input.salary}
-                                onChange={changeEventHandler}
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
-                            />
-                        </div>
-                        <div>
-                            <Label>Location</Label>
-                            <Input
-                                type="text"
-                                name="location"
-                                value={input.location}
-                                onChange={changeEventHandler}
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
-                            />
-                        </div>
+
                         <div>
                             <Label>Requirements</Label>
                             <Input

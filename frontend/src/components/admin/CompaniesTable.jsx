@@ -24,9 +24,9 @@ const CompaniesTable = () => {
 
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg max-w-7xl mx-auto">
-      <h1 className="text-3xl font-semibold mb-6 text-gray-800">Recent Applied Clubs</h1>
+      <h1 className="text-3xl font-semibold mb-6 text-gray-800">Active Clubs</h1>
       <Table className="min-w-full border-separate border-spacing-y-2">
-        <TableCaption className="mb-4 text-gray-500">List of Recent Applied Clubs</TableCaption>
+        <TableCaption className="mb-4 text-gray-500">List of Active Clubs</TableCaption>
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="py-3 text-lg">Logo</TableHead>

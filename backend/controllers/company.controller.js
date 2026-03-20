@@ -1,6 +1,8 @@
 import { Company } from "../model/company.model.js";
+import { User } from "../model/user.model.js";
 import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
+import bcrypt from "bcryptjs";
 
 export const registerCompany = async (req, res) => {
     try {
@@ -80,7 +82,7 @@ export const getCompanyById = async (req, res) => {
 }
 export const updateCompany = async (req, res) => {
     try {
-        const { name, description, about, pptLink } = req.body;
+        const { name, description, about, pptLink, instagram, linkedin, twitter, website } = req.body;
         const file = req.file;
         let logo = "";
         if (file) {
@@ -93,6 +95,13 @@ export const updateCompany = async (req, res) => {
         if (about !== undefined) updateData.about = about;
         if (pptLink !== undefined) updateData.pptLink = pptLink;
         if (logo) updateData.logo = logo;
+
+        // Assign socials safely if any were provided
+        updateData.socials = {};
+        if (instagram !== undefined) updateData.socials.instagram = instagram;
+        if (linkedin !== undefined) updateData.socials.linkedin = linkedin;
+        if (twitter !== undefined) updateData.socials.twitter = twitter;
+        if (website !== undefined) updateData.socials.website = website;
 
         const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
 
@@ -128,5 +137,43 @@ export const getAllCompanies = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const deleteCompany = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { password } = req.body;
+        const userId = req.id;
+
+        if (!password) {
+            return res.status(400).json({ message: "Password is required to delete the club.", success: false });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found.", success: false });
+        }
+
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            return res.status(401).json({ message: "Incorrect password. Deletion aborted.", success: false });
+        }
+
+        const company = await Company.findById(id);
+        if (!company) {
+            return res.status(404).json({ message: "Club not found.", success: false });
+        }
+
+        // Optional: delete associated jobs and events. For now, just delete the company.
+        await Company.findByIdAndDelete(id);
+
+        return res.status(200).json({
+            message: "Club deleted successfully.",
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error.", success: false });
     }
 }

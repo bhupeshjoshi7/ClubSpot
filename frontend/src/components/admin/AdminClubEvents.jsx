@@ -21,6 +21,7 @@ const AdminClubEvents = () => {
         description: "",
         date: "",
         link: "",
+        file: null
     });
 
     const fetchEvents = async () => {
@@ -44,22 +45,33 @@ const AdminClubEvents = () => {
         setInput({ ...input, [e.target.name]: e.target.value });
     };
 
+    const changeFileHandler = (e) => {
+        setInput({ ...input, file: e.target.files?.[0] });
+    };
+
     const submitHandler = async (e) => {
         e.preventDefault();
         setLoading(true);
 
+        const formData = new FormData();
+        formData.append("title", input.title);
+        formData.append("description", input.description);
+        formData.append("date", input.date);
+        if (input.link) formData.append("link", input.link);
+        formData.append("companyId", params.id);
+        if (input.file) {
+            formData.append("file", input.file);
+        }
+
         try {
-            const res = await axios.post(`${EVENT_API_END_POINT}/create`, {
-                ...input,
-                companyId: params.id
-            }, {
-                headers: { "Content-Type": "application/json" },
+            const res = await axios.post(`${EVENT_API_END_POINT}/create`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true,
             });
 
             if (res.data.success) {
                 toast.success(res.data.message);
-                setInput({ title: "", description: "", date: "", link: "" });
+                setInput({ title: "", description: "", date: "", link: "", file: null });
                 fetchEvents();
             }
         } catch (error) {
@@ -113,6 +125,10 @@ const AdminClubEvents = () => {
                         <div className="md:col-span-2">
                             <Label>Registration / Meeting Link (Optional)</Label>
                             <Input type="url" name="link" value={input.link} onChange={changeEventHandler} placeholder="https://..." />
+                        </div>
+                        <div className="md:col-span-2">
+                            <Label>Event Poster (Optional)</Label>
+                            <Input type="file" accept="image/*" onChange={changeFileHandler} className="cursor-pointer" />
                         </div>
                     </div>
                     <Button type="submit" className="mt-6 w-full md:w-auto" disabled={loading}>

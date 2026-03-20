@@ -3,6 +3,7 @@ import { Navbar } from './components/shared/Navbar'
 import Home from './components/Home'
 import Login from './components/auth/Login'
 import Signup from './components/auth/Signup'
+import ForgotPassword from './components/auth/ForgotPassword'
 import Clubs from './components/Clubs'
 import Profile from './components/Profile'
 import AppliedJobTable from './components/AppliedClubsTable'
@@ -29,6 +30,10 @@ const appRouter = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />
   },
   {
     path: "/clubs",

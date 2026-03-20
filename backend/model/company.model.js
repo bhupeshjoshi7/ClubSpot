@@ -22,5 +22,11 @@ const companySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, ref: 'User',
         required: true
     },
+    socials: {
+        instagram: { type: String, default: "" },
+        linkedin: { type: String, default: "" },
+        twitter: { type: String, default: "" },
+        website: { type: String, default: "" }
+    }
 }, { timestamps: true });
 export const Company = mongoose.model('Company', companySchema);

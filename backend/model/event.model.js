@@ -16,6 +16,22 @@ const eventSchema = new mongoose.Schema({
     link: {
         type: String,
     },
+    poster: {
+        type: String,  // URL from Cloudinary
+    },
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+    comments: [
+        {
+            user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            text: { type: String, required: true },
+            createdAt: { type: Date, default: Date.now }
+        }
+    ],
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',

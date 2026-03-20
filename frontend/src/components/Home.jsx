@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Navbar } from './shared/Navbar'
 import HeroSection from './HeroSection'
 import LatestClubs from './LatestClubs'
+import EventFeed from './EventFeed'
 import Footer from './footer'
 import useGetAllClubs from '@/hooks/useGetAllClubs'
 import { useSelector } from 'react-redux'
@@ -20,7 +21,8 @@ const Home = () => {
     <div >
       <Navbar />
       <HeroSection />
-      <LatestClubs />
+      <EventFeed />
+      {/* <LatestClubs /> */}
       <Footer />
     </div>
   )

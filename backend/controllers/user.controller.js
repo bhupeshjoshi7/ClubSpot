@@ -1,17 +1,62 @@
 import { User } from "../model/user.model.js";
+import { OTP } from "../model/otp.model.js";
+import { sendEmail } from "../utils/sendEmail.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
+
+export const requestSignupOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email is required.", success: false });
+
+    if (!email.toLowerCase().endsWith("@pec.edu.in")) {
+      return res.status(400).json({ message: "Only @pec.edu.in emails are allowed.", success: false });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ message: "User already exists.", success: false });
+
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await OTP.deleteMany({ email });
+    await OTP.create({ email, otp: otpCode });
+
+    const emailSent = await sendEmail(
+      email,
+      "ClubSpot Registration OTP",
+      `Your OTP for ClubSpot registration is: ${otpCode}. It is valid for 5 minutes.`
+    );
+
+    if (!emailSent) {
+      return res.status(500).json({ message: "Failed to send OTP email. Contact support.", success: false });
+    }
+
+    return res.status(200).json({ message: "OTP sent successfully to your email.", success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server error", success: false });
+  }
+}
+
 export const register = async (req, res) => {
   try {
-    const { fullname, email, phoneNumber, password, role } = req.body;
-    if (!fullname || !email || !phoneNumber || !password || !role) {
-      return res.status(400).json({
-        message: "Something is missing",
-        sucess: false,
-      });
+    const { fullname, email, phoneNumber, password, role, sid, otp } = req.body;
+
+    if (!fullname || !email || !password || !role || !otp) {
+      return res.status(400).json({ message: "Important fields or OTP missing", success: false });
     }
+
+    if (!email.toLowerCase().endsWith("@pec.edu.in")) {
+      return res.status(400).json({ message: "Only @pec.edu.in emails are allowed to register.", success: false });
+    }
+
+    if (role === 'student') {
+      if (!sid) return res.status(400).json({ message: "Student ID (SID) is required for students.", success: false });
+      if (!phoneNumber) return res.status(400).json({ message: "Phone number is required for students.", success: false });
+    }
+
     const file = req.file;
     let cloudResponse = null;
     if (file) {
@@ -26,7 +71,16 @@ export const register = async (req, res) => {
         success: false,
       });
     }
+
+    const otpRecord = await OTP.findOne({ email, otp });
+    if (!otpRecord) {
+      return res.status(400).json({ message: "Invalid or expired OTP.", success: false });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Clear the OTP to prevent reuse
+    await OTP.deleteMany({ email });
     await User.create({
       fullname,
       email,
@@ -35,6 +89,7 @@ export const register = async (req, res) => {
       role,
       profile: {
         profilePhoto: cloudResponse ? cloudResponse.secure_url : "",
+        SID: sid ? Number(sid) : undefined,
       }
     });
     return res.status(201).json({
@@ -131,7 +186,7 @@ export const UpdateProfile = async (req, res) => {
 
     // Update user fields
     if (fullname) user.fullname = fullname;
-    if (email) user.email = email;
+    // if (email) user.email = email;
     if (phoneNumber) user.phoneNumber = phoneNumber;
     if (bio) user.profile.bio = bio;
     if (skills) user.profile.skills = skills.split(",");
@@ -162,3 +217,54 @@ export const UpdateProfile = async (req, res) => {
     });
   }
 };
+
+export const requestPasswordResetOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email is required.", success: false });
+
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) return res.status(404).json({ message: "User not found.", success: false });
+
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await OTP.deleteMany({ email });
+    await OTP.create({ email, otp: otpCode });
+
+    await sendEmail(
+      email,
+      "ClubSpot Password Reset OTP",
+      `Your OTP to reset your ClubSpot password is: ${otpCode}. It is valid for 5 minutes.`
+    );
+
+    return res.status(200).json({ message: "Password reset OTP sent to your email.", success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server error", success: false });
+  }
+}
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ message: "Important fields missing.", success: false });
+    }
+
+    const otpRecord = await OTP.findOne({ email, otp });
+    if (!otpRecord) {
+      return res.status(400).json({ message: "Invalid or expired OTP.", success: false });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.findOneAndUpdate({ email }, { password: hashedPassword });
+
+    await OTP.deleteMany({ email });
+
+    return res.status(200).json({ message: "Password reset successfully. You can now login.", success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server error", success: false });
+  }
+}

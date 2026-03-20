@@ -30,11 +30,12 @@ const ApplicantsTable = () => {
                 <TableCaption>A list of your recent applied user</TableCaption>
                 <TableHeader>
                     <TableRow>
+                        <TableHead>SID</TableHead>
                         <TableHead>FullName</TableHead>
                         <TableHead>Email</TableHead>
                         <TableHead>Contact</TableHead>
-                        <TableHead>Resume</TableHead>
                         <TableHead>Date</TableHead>
+                        <TableHead>Status</TableHead>
                         <TableHead className="text-right">Action</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -42,15 +43,23 @@ const ApplicantsTable = () => {
                     {
                         applicants && applicants?.applications?.map((item) => (
                             <tr key={item._id}>
-                                <TableCell>{item?.applicant?.fullName}</TableCell>
-                                <TableCell>{item?.applicant?.email}</TableCell>
-                                <TableCell>{item?.applicant?.phoneNumber}</TableCell>
-                                <TableCell >
-                                    {
-                                        item.applicant?.profile?.resume ? <a className="text-blue-600 cursor-pointer" href={item?.applicant?.profile?.resume} target="_blank" rel="noopener noreferrer">{item?.applicant?.profile?.resumeOriginalName}</a> : <span>NA</span>
-                                    }
+                                <TableCell className="font-semibold text-gray-900 border-r bg-gray-50">{item?.applicant?.profile?.SID || 'NA'}</TableCell>
+                                <TableCell className="font-medium text-gray-900">{item?.applicant?.fullname || 'NA'}</TableCell>
+                                <TableCell className="text-gray-600">{item?.applicant?.email || 'NA'}</TableCell>
+                                <TableCell className="text-gray-600">
+                                    <div className="flex items-center gap-1">
+                                        📞 {item?.applicant?.phoneNumber || 'NA'}
+                                    </div>
                                 </TableCell>
-                                <TableCell>{item?.createdAt.split("T")[0]}</TableCell>
+                                <TableCell className="text-gray-500 text-sm whitespace-nowrap">{item?.createdAt?.split("T")[0]}</TableCell>
+                                <TableCell>
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${item?.status?.toLowerCase() === 'accepted' ? 'bg-emerald-100 text-emerald-800' :
+                                        item?.status?.toLowerCase() === 'rejected' ? 'bg-rose-100 text-rose-800' :
+                                            'bg-gray-100 text-gray-800'
+                                        }`}>
+                                        {item?.status?.toUpperCase() || 'PENDING'}
+                                    </span>
+                                </TableCell>
                                 <TableCell className="float-right cursor-pointer">
                                     <Popover>
                                         <PopoverTrigger>

@@ -20,7 +20,7 @@ const HeroSection = () => {
       </h1>
 
       {/* Search Bar */}
-      <div className="flex items-center w-full sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] shadow-lg border border-gray-200 pl-4 rounded-full mx-auto mt-8 bg-white">
+      {/* <div className="flex items-center w-full sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] shadow-lg border border-gray-200 pl-4 rounded-full mx-auto mt-8 bg-white">
         <input
           type="text"
           placeholder="Explore all clubs"
@@ -29,7 +29,7 @@ const HeroSection = () => {
         <Button className="rounded-r-full bg-blue-700 text-white p-2 hover:bg-blue-800 transition duration-300">
           <Search className="h-6 w-6" />
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };

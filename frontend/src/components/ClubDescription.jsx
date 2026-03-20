@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { JOB_API_END_POINT, APPLICATION_API_END_POINT, CL_API_END_POINT, EVENT_API_END_POINT } from "@/utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { Loader2, MapPin, Calendar, Users, Briefcase } from "lucide-react";
+import { Loader2, MapPin, Calendar, Users, Briefcase, Instagram, Linkedin, Twitter, Globe } from "lucide-react";
 import { Navbar } from "./shared/Navbar";
 
 const ClubDescription = () => {
   const params = useParams();
   const clubId = params.id;
+  const navigate = useNavigate();
   const { user } = useSelector(store => store.auth);
 
   const [club, setClub] = useState(null);
@@ -20,6 +21,12 @@ const ClubDescription = () => {
   const [loading, setLoading] = useState(true);
 
   const applyHandler = async (jobId) => {
+    if (!user) {
+      toast.error("You must be logged in to apply for openings!");
+      navigate("/login");
+      return;
+    }
+
     try {
       const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
       if (res.data.success) {
@@ -101,30 +108,52 @@ const ClubDescription = () => {
             </div>
             <div className="flex-1">
               <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
-                <span className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                {/* <span className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                   Official Club
                 </span>
                 <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                   Verified
-                </span>
+                </span> */}
               </div>
               <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">{club.name}</h1>
               <div className="flex flex-wrap justify-center md:justify-start gap-6 text-gray-500 font-medium">
                 <div className="flex items-center gap-2">
                   <MapPin size={18} className="text-blue-500" />
-                  India
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar size={18} className="text-blue-500" />
-                  Since {new Date(club.createdAt).getFullYear()}
+                  PEC Chandigarh
                 </div>
               </div>
+
+              {/* Social Links */}
+              {(club.socials?.instagram || club.socials?.linkedin || club.socials?.twitter || club.socials?.website) && (
+                <div className="flex justify-center md:justify-start gap-4 mt-6">
+                  {club.socials?.instagram && (
+                    <a href={club.socials.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 transition-colors bg-gray-50 p-2 rounded-full hover:bg-pink-50">
+                      <Instagram size={20} />
+                    </a>
+                  )}
+                  {club.socials?.linkedin && (
+                    <a href={club.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-700 transition-colors bg-gray-50 p-2 rounded-full hover:bg-blue-50">
+                      <Linkedin size={20} />
+                    </a>
+                  )}
+                  {club.socials?.twitter && (
+                    <a href={club.socials.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black transition-colors bg-gray-50 p-2 rounded-full hover:bg-gray-200">
+                      <Twitter size={20} />
+                    </a>
+                  )}
+                  {club.socials?.website && (
+                    <a href={club.socials.website} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-500 transition-colors bg-gray-50 p-2 rounded-full hover:bg-blue-50">
+                      <Globe size={20} />
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
           <div className="mt-10 pt-8 border-t border-gray-100">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">About the Club</h2>
-            <p className="text-gray-600 text-lg leading-relaxed max-w-4xl mb-6">
+            <p className="text-gray-600 text-lg leading-relaxed max-w-4xl mb-6 whitespace-pre-wrap">
               {club.about || club.description || "Join this club to explore amazing opportunities and be part of a vibrant community."}
             </p>
             {club.pptLink && (
@@ -177,8 +206,8 @@ const ClubDescription = () => {
                     </div>
                     <div className="flex flex-col sm:flex-row items-center gap-4">
                       <div className="text-right hidden sm:block px-4">
-                        <span className="block text-xs uppercase tracking-widest text-gray-400 font-bold mb-1">Salary</span>
-                        <span className="text-lg font-bold text-gray-900">{job.salary}</span>
+                        {/* <span className="block text-xs uppercase tracking-widest text-gray-400 font-bold mb-1">Salary</span> */}
+                        {/* <span className="text-lg font-bold text-gray-900">{job.salary}</span> */}
                       </div>
                       <Button
                         onClick={() => !isApplied && job.isActive && applyHandler(job._id)}
@@ -211,7 +240,12 @@ const ClubDescription = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {events.map(event => (
-                <div key={event._id} className="border border-gray-100 p-6 rounded-2xl hover:shadow-md transition-shadow bg-gray-50">
+                <div key={event._id} className="border border-gray-100 p-6 rounded-2xl hover:shadow-md transition-shadow bg-gray-50 flex flex-col">
+                  {event.poster && (
+                    <div className="mb-4 rounded-xl overflow-hidden h-48 w-full shrink-0">
+                      <img src={event.poster} alt={event.title} className="w-full h-full object-cover rounded-xl" />
+                    </div>
+                  )}
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h3>
                   <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-4">
                     <span className="flex items-center gap-1">

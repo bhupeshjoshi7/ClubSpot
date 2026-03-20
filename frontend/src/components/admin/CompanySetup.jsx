@@ -19,11 +19,18 @@ const CompanySetup = () => {
     description: "",
     about: "",
     pptLink: "",
+    instagram: "",
+    linkedin: "",
+    twitter: "",
+    website: "",
     file: null,
   });
 
   const { singleCompany } = useSelector((store) => store.company);
   const [loading, setLoading] = useState(false);
+  const [showDeletePrompt, setShowDeletePrompt] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
 
   const changeEventHandler = (e) => {
@@ -44,6 +51,10 @@ const CompanySetup = () => {
     formData.append("description", input.description);
     formData.append("about", input.about);
     formData.append("pptLink", input.pptLink);
+    formData.append("instagram", input.instagram);
+    formData.append("linkedin", input.linkedin);
+    formData.append("twitter", input.twitter);
+    formData.append("website", input.website);
     if (input.file) {
       formData.append("file", input.file);
     }
@@ -70,6 +81,29 @@ const CompanySetup = () => {
     }
   };
 
+  const deleteClubHandler = async () => {
+    if (!deletePassword) {
+      toast.error("Please enter your password to confirm.");
+      return;
+    }
+    setDeleting(true);
+    try {
+      const res = await axios.post(
+        `${CL_API_END_POINT}/delete/${params.id}`,
+        { password: deletePassword },
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        navigate("/admin/companies");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete the club.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   useEffect(() => {
     if (singleCompany) {
       setInput({
@@ -77,6 +111,10 @@ const CompanySetup = () => {
         description: singleCompany.description || "",
         about: singleCompany.about || "",
         pptLink: singleCompany.pptLink || "",
+        instagram: singleCompany.socials?.instagram || "",
+        linkedin: singleCompany.socials?.linkedin || "",
+        twitter: singleCompany.socials?.twitter || "",
+        website: singleCompany.socials?.website || "",
         file: null,
       });
     }
@@ -118,21 +156,21 @@ const CompanySetup = () => {
             </div>
             <div>
               <Label>Club Description</Label>
-              <Input
-                type="text"
+              <textarea
                 name="description"
                 value={input.description}
                 onChange={changeEventHandler}
+                className="flex min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               />
             </div>
             <div className="md:col-span-2">
               <Label>About</Label>
-              <Input
-                type="text"
+              <textarea
                 name="about"
                 value={input.about}
                 onChange={changeEventHandler}
                 placeholder="Detailed information about the club..."
+                className="flex min-h-[150px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               />
             </div>
             <div className="md:col-span-2">
@@ -145,9 +183,32 @@ const CompanySetup = () => {
                 placeholder="https://docs.google.com/presentation/..."
               />
             </div>
-            <div className="md:col-span-2">
+
+            <div className="md:col-span-2 pt-6 border-t border-gray-100 mt-2">
+              <h3 className="text-lg font-bold mb-4 text-gray-800">Social Handles (Optional)</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label>Instagram URL</Label>
+                  <Input type="text" name="instagram" value={input.instagram} onChange={changeEventHandler} placeholder="https://instagram.com/..." />
+                </div>
+                <div>
+                  <Label>LinkedIn URL</Label>
+                  <Input type="text" name="linkedin" value={input.linkedin} onChange={changeEventHandler} placeholder="https://linkedin.com/in/..." />
+                </div>
+                <div>
+                  <Label>Twitter/X URL</Label>
+                  <Input type="text" name="twitter" value={input.twitter} onChange={changeEventHandler} placeholder="https://twitter.com/..." />
+                </div>
+                <div>
+                  <Label>Website URL</Label>
+                  <Input type="text" name="website" value={input.website} onChange={changeEventHandler} placeholder="https://example.com" />
+                </div>
+              </div>
+            </div>
+
+            <div className="md:col-span-2 pt-6 border-t border-gray-100 mt-2">
               <Label>Update Logo</Label>
-              <Input type="file" onChange={changeFileHandler} />
+              <Input type="file" onChange={changeFileHandler} className="mt-2" />
             </div>
           </div>
           <Button
@@ -165,6 +226,43 @@ const CompanySetup = () => {
             )}
           </Button>
         </form>
+
+        {/* Danger Zone */}
+        <div className="mt-12 pt-8 border-t border-red-200">
+          <h2 className="text-xl font-bold text-red-600 mb-4">Danger Zone</h2>
+          <div className="bg-red-50 border border-red-200 p-6 rounded-lg">
+            <h3 className="font-semibold text-red-800 mb-2">Delete this Club</h3>
+            <p className="text-sm text-red-600 mb-6">Once deleted, it will be gone forever. Please be certain.</p>
+
+            {!showDeletePrompt ? (
+              <Button onClick={() => setShowDeletePrompt(true)} variant="destructive">
+                Delete Club
+              </Button>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-red-800">Confirm Password</Label>
+                  <Input
+                    type="password"
+                    placeholder="Enter your account password"
+                    value={deletePassword}
+                    onChange={(e) => setDeletePassword(e.target.value)}
+                    className="mt-2 border-red-300 focus-visible:ring-red-500"
+                  />
+                </div>
+                <div className="flex gap-4">
+                  <Button onClick={deleteClubHandler} variant="destructive" disabled={deleting}>
+                    {deleting ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
+                    Confirm Delete
+                  </Button>
+                  <Button onClick={() => { setShowDeletePrompt(false); setDeletePassword(""); }} variant="outline">
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

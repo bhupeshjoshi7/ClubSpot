@@ -59,7 +59,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message);
-        } finally{
+        } finally {
             setLoading(false);
         }
         setOpen(false);
@@ -88,7 +88,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                     className="col-span-3"
                                 />
                             </div>
-                            <div className='grid grid-cols-4 items-center gap-4'>
+                            {/* <div className='grid grid-cols-4 items-center gap-4'>
                                 <Label htmlFor="email" className="text-right">Email</Label>
                                 <Input
                                     id="email"
@@ -98,7 +98,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                     onChange={changeEventHandler}
                                     className="col-span-3"
                                 />
-                            </div>
+                            </div> */}
                             <div className='grid grid-cols-4 items-center gap-4'>
                                 <Label htmlFor="number" className="text-right">Number</Label>
                                 <Input
@@ -129,7 +129,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                     className="col-span-3"
                                 />
                             </div>
-                            <div className='grid grid-cols-4 items-center gap-4'>
+                            {/* <div className='grid grid-cols-4 items-center gap-4'>
                                 <Label htmlFor="file" className="text-right">Resume</Label>
                                 <Input
                                     id="file"
@@ -139,11 +139,11 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                     onChange={fileChangeHandler}
                                     className="col-span-3"
                                 />
-                            </div>
+                            </div> */}
                         </div>
                         <DialogFooter>
                             {
-                              <Button type="submit" className="w-full my-4">Update</Button>
+                                <Button type="submit" className="w-full my-4">Update</Button>
                             }
                         </DialogFooter>
                     </form>
