@@ -48,7 +48,7 @@ export const Navbar = () => {
         </div>
         <div className="flex items-center gap-6 md:gap-12">
           <ul className="hidden md:flex font-medium text-lg items-center gap-6 md:gap-10">
-            {user && user?.role === "recruiter" ? (
+            {user && user?.role === "admin" ? (
               <li>
                 <Link to="/admin/position">Club Positions</Link>
               </li>
@@ -75,7 +75,7 @@ export const Navbar = () => {
               </PopoverTrigger>
               <PopoverContent className="z-50 bg-white shadow-lg rounded-lg p-4 w-48">
                 <ul className="flex flex-col space-y-4">
-                  {user && user?.role === "recruiter" ? (
+                  {user && user?.role === "admin" ? (
                     <li>
                       <Link to="/admin/position">Club Positions</Link>
                     </li>

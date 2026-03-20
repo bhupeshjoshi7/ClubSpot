@@ -11,9 +11,9 @@ export const postJob = async (req, res) => {
                 success: false
             })
         };
-        if (role != 'recruiter') {
-            res.status(403).json({
-                message: "You are not recruiter",
+        if (role !== 'admin') {
+            return res.status(403).json({
+                message: "You are not an admin",
                 success: false
             })
         }

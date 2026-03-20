@@ -14,7 +14,7 @@ export const applyJob = async (req, res) => {
         };
         if (role != "student") {
             return res.status(201).json({
-                message: "You are recruiter. You can not apply for job",
+                message: "You are an admin. You cannot apply for a club position",
                 success: false
             })
         };

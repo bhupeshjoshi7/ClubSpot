@@ -14,7 +14,7 @@ export const registerCompany = async (req, res) => {
             });
         }
         //const user = await User.findById(req.id); 
-        if (req.role !== 'recruiter') {
+        if (req.role !== 'admin') {
             return res.status(403).json({
                 message: "You are not authorized to register a company.",
                 success: false

@@ -15,9 +15,9 @@ export const createEvent = async (req, res) => {
             });
         }
 
-        if (req.role !== 'recruiter') {
+        if (req.role !== 'admin') {
             return res.status(403).json({
-                message: "Only recruiters can create events.",
+                message: "Only club admins can create events.",
                 success: false
             });
         }
